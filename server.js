@@ -14,7 +14,7 @@ if (!MONGODB_URI) {
 
 let videosCollection;
 
-async function connectToDatabase() {
+async function connectToDatabase(retriesLeft = 5) {
   const client = new MongoClient(MONGODB_URI, {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -22,10 +22,19 @@ async function connectToDatabase() {
       deprecationErrors: true
     }
   });
-  await client.connect();
-  const db = client.db('freakout-slop');
-  videosCollection = db.collection('videos');
-  console.log('Connected to MongoDB');
+  try {
+    await client.connect();
+    const db = client.db('freakout-slop');
+    videosCollection = db.collection('videos');
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    if (retriesLeft > 0) {
+      console.log(`MongoDB connection failed, retrying in 3s... (${retriesLeft} attempts left)`);
+      await new Promise(r => setTimeout(r, 3000));
+      return connectToDatabase(retriesLeft - 1);
+    }
+    throw err;
+  }
 }
 
 app.use(express.json());
