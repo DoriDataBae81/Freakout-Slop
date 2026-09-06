@@ -1,11 +1,12 @@
 :root {
-  --bg: #f5511e;
+  --bg: #2e4a5e;
   --panel: #fdf6e8;
   --border: #14213d;
   --text: #14213d;
   --text-dim: #5b6b8c;
   --accent: #1a3f8f;
   --accent-hover: #26529e;
+  --orange: #f5511e;
   --lime: #c4d600;
   --up: #6b8f00;
   --down: #c1272d;
@@ -41,8 +42,8 @@ img.brand-mark {
   border: 2px solid var(--border);
 }
 .brand-name {
-  color: var(--accent);
-  text-shadow: 1.5px 1.5px 0 #fff, -1px -1px 0 var(--border);
+  color: var(--orange);
+  text-shadow: 1.5px 1.5px 0 var(--border);
   letter-spacing: 0.5px;
 }
 
