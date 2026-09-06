@@ -33,10 +33,10 @@ body {
   z-index: 10;
 }
 
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.3rem; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.7rem; }
 img.brand-mark {
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   border-radius: 6px;
   object-fit: cover;
   border: 2px solid var(--border);
