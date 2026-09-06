@@ -112,6 +112,27 @@ app.post('/api/videos/:id/vote', async (req, res) => {
   res.json(result);
 });
 
+function checkAdminPassword(req, res, next) {
+  const provided = req.headers['x-admin-password'];
+  if (!process.env.ADMIN_PASSWORD) {
+    return res.status(500).json({ error: 'Admin password not configured on the server' });
+  }
+  if (provided !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Incorrect password' });
+  }
+  next();
+}
+
+app.post('/api/admin/verify', checkAdminPassword, (req, res) => {
+  res.json({ ok: true });
+});
+
+app.delete('/api/videos/:id', checkAdminPassword, async (req, res) => {
+  const result = await videosCollection.deleteOne({ id: req.params.id });
+  if (result.deletedCount === 0) return res.status(404).json({ error: 'not found' });
+  res.json({ ok: true });
+});
+
 // Start listening immediately so Render's port check succeeds right away.
 app.listen(PORT, () => {
   console.log(`Video board running on http://localhost:${PORT}`);

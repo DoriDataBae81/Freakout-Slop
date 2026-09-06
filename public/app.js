@@ -3,8 +3,28 @@ const toggleBtn = document.getElementById('submit-toggle');
 const panel = document.getElementById('submit-panel');
 const submitBtn = document.getElementById('submit-btn');
 const urlInput = document.getElementById('url-input');
+const adminDot = document.getElementById('admin-dot');
+
+let adminPassword = sessionStorage.getItem('adminPassword') || null;
 
 toggleBtn.addEventListener('click', () => panel.classList.toggle('hidden'));
+
+adminDot.addEventListener('click', async () => {
+  const attempt = prompt('Admin password:');
+  if (!attempt) return;
+  const res = await fetch('/api/admin/verify', {
+    method: 'POST',
+    headers: { 'x-admin-password': attempt }
+  });
+  if (res.ok) {
+    adminPassword = attempt;
+    sessionStorage.setItem('adminPassword', attempt);
+    alert('Admin mode on. Delete buttons will appear on cards.');
+    loadVideos();
+  } else {
+    alert('Wrong password.');
+  }
+});
 
 async function loadVideos() {
   const res = await fetch('/api/videos');
@@ -22,6 +42,7 @@ function renderCard(video, rank) {
   card.innerHTML = `
     <div class="thumb-wrap">
       <div class="rank-badge">RANK ${String(rank).padStart(2, '0')}</div>
+      ${adminPassword ? '<button class="delete-btn" title="Delete">&times;</button>' : ''}
       <img class="thumb" src="${video.thumbnailUrl}" alt="" loading="lazy" />
       <div class="play-btn">&#9658;</div>
     </div>
@@ -50,6 +71,23 @@ function renderCard(video, rank) {
   thumbWrap.addEventListener('click', () => {
     thumbWrap.innerHTML = `<iframe src="${video.embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
   });
+
+  const deleteBtn = card.querySelector('.delete-btn');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm('Delete this video?')) return;
+      const res = await fetch(`/api/videos/${video.id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-password': adminPassword }
+      });
+      if (res.ok) {
+        loadVideos();
+      } else {
+        alert('Could not delete (wrong password saved?). Click the admin dot again to re-enter it.');
+      }
+    });
+  }
 
   card.querySelectorAll('.vote-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {

@@ -192,3 +192,33 @@ img.brand-mark {
 }
 .vote-btn.up:hover { border-color: var(--up); color: var(--up); background: #eef7d8; }
 .vote-btn.down:hover { border-color: var(--down); color: var(--down); background: #fbe4e4; }
+
+/* Hidden admin unlock dot, bottom-right corner. On purpose: nearly invisible. */
+#admin-dot {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  z-index: 999;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--down);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+.delete-btn:hover { background: #a01f24; }
