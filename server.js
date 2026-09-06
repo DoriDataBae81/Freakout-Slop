@@ -25,13 +25,12 @@ app.get('/api/videos', (req, res) => {
 });
 
 app.post('/api/videos', (req, res) => {
-  const { title, url } = req.body || {};
-  if (!title || !url) {
+  const { url } = req.body || {};
+  if (!url) {
     return res.status(400).json({ error: 'title and url are required' });
   }
   const video = {
     id: randomUUID(),
-    title: String(title).slice(0, 140),
     url: toEmbeddable(String(url)),
     votes: 0,
     submittedAt: Date.now()

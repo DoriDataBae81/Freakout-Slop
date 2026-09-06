@@ -2,7 +2,6 @@ const grid = document.getElementById('grid');
 const toggleBtn = document.getElementById('submit-toggle');
 const panel = document.getElementById('submit-panel');
 const submitBtn = document.getElementById('submit-btn');
-const titleInput = document.getElementById('title-input');
 const urlInput = document.getElementById('url-input');
 
 toggleBtn.addEventListener('click', () => panel.classList.toggle('hidden'));
@@ -20,7 +19,6 @@ function renderCard(video) {
   card.innerHTML = `
     <iframe src="${video.url}" allowfullscreen loading="lazy"></iframe>
     <div class="card-body">
-      <div class="card-title">${escapeHtml(video.title)}</div>
       <div class="vote-controls">
         <button class="vote-btn" data-dir="up">▲</button>
         <span class="vote-count">${video.votes}</span>
@@ -44,15 +42,14 @@ function renderCard(video) {
 }
 
 submitBtn.addEventListener('click', async () => {
-  const title = titleInput.value.trim();
+  
   const url = urlInput.value.trim();
-  if (!title || !url) return;
+  if (!url) return;
   await fetch('/api/videos', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, url })
+    body: JSON.stringify({ url })
   });
-  titleInput.value = '';
   urlInput.value = '';
   panel.classList.add('hidden');
   loadVideos();
