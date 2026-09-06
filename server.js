@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { randomUUID } = require('crypto');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +15,13 @@ if (!MONGODB_URI) {
 let videosCollection;
 
 async function connectToDatabase() {
-  const client = new MongoClient(MONGODB_URI);
+  const client = new MongoClient(MONGODB_URI, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true
+    }
+  });
   await client.connect();
   const db = client.db('freakout-slop');
   videosCollection = db.collection('videos');
