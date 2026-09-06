@@ -10,22 +10,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // --- In-memory data store ---
 // Swap this out for a real database (SQLite/Postgres) once you outgrow it.
-let videos = [
-  {
-    id: randomUUID(),
-    title: 'Guy trips over his own dog',
-    url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    votes: 12,
-    submittedAt: Date.now() - 1000 * 60 * 60 * 5
-  },
-  {
-    id: randomUUID(),
-    title: 'Parking lot chaos',
-    url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    votes: 4,
-    submittedAt: Date.now() - 1000 * 60 * 30
-  }
-];
+let videos = [];
 
 function toEmbeddable(url) {
   // Very light helper: converts a normal YouTube link to an embeddable one.
