@@ -34,8 +34,7 @@ body {
 }
 
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; }
-.brand-mark { color: var(--accent); font-size: 1.4rem; }
-
+img.brand-mark { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
 .btn {
   border: none;
   border-radius: 8px;
