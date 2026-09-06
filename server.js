@@ -56,6 +56,13 @@ async function fetchYouTubeTitle(url) {
   }
 }
 
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/') && !videosCollection) {
+    return res.status(503).json({ error: 'Still connecting to the database, try again in a few seconds' });
+  }
+  next();
+});
+
 app.get('/api/videos', async (req, res) => {
   const videos = await videosCollection.find({}).toArray();
   videos.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
@@ -105,13 +112,12 @@ app.post('/api/videos/:id/vote', async (req, res) => {
   res.json(result);
 });
 
-connectToDatabase()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Video board running on http://localhost:${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('Failed to connect to MongoDB:', err.message);
-    process.exit(1);
-  });
+// Start listening immediately so Render's port check succeeds right away.
+app.listen(PORT, () => {
+  console.log(`Video board running on http://localhost:${PORT}`);
+});
+
+// Connect to the database in the background; requests get a 503 until it's ready.
+connectToDatabase().catch(err => {
+  console.error('Failed to connect to MongoDB after retries:', err.message);
+});
